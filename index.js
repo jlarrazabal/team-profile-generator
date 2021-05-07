@@ -12,7 +12,7 @@ class Employee {
     this.name = name;
     this.id = id;
     this.email = email;
-    getName() {
+    this.getName = function() {
       inquirer.prompt([{
         type: "input",
         name: "name",
@@ -25,8 +25,8 @@ class Employee {
           this.name = answers.name;
         }
       });
-    }
-    getId() {
+    };
+    this.getId = function() {
       inquirer.prompt([{
         type: "input",
         name: "id",
@@ -39,8 +39,8 @@ class Employee {
           this.id = answers.id;
         }
       });
-    }
-    getEmail() {
+    };
+    this.getEmail = function() {
       inquirer.prompt([{
         type: "input",
         name: "email",
@@ -53,20 +53,21 @@ class Employee {
           this.email = answers.email;
         }
       });
-    }
-    getRole() {
+    };
+    this.getRole= function() {
       return "Employe";
     }
   }
 }
 
 class Manager extends Employee {
-  constructor() {
-    this.getRole(){
+  constructor(name, id, email, managerOfficeNumber) {
+    super(name, id, email);
+    this.getRole = function(){
       return "Manager";
-    }
+    };
     this.managerOfficeNumber = managerOfficeNumber;
-    getOfficeNumber(){
+    this.getOfficeNumber = function(){
       inquirer.prompt([{
         type: "input",
         name: "managerOfficeNumber",
@@ -84,12 +85,13 @@ class Manager extends Employee {
 }
 
 class Engineer extends Employee {
-  constructor() {
-    this.getRole(){
+  constructor(name, id, email, github) {
+    super(name, id, email);
+    this.getRole = function(){
       return "Engineer";
-    }
+    };
     this.github = github;
-    getGitHub(){
+    this.getGitHub = function(){
       inquirer.prompt([{
         type: "input",
         name: "github",
@@ -107,12 +109,13 @@ class Engineer extends Employee {
 }
 
 class Intern extends Employee {
-  constructor() {
-    this.getRole() {
+  constructor(name, id, email, school) {
+    super(name, id, email);
+    this.getRole = function() {
       return "Intern";
-    }
+    };
     this.school = school;
-    getSchool() {
+    this.getSchool = function() {
       inquirer.prompt([{
         type: "input",
         name: "school",
@@ -133,13 +136,42 @@ class Intern extends Employee {
 
 const addManager = function() {
   const newManager = new Manager();
-  newManager.getName();
-  newManager.getId();
-  newManager.getEmail();
-  newManager.getRole();
-  newManager.getOfficeNumber();
-  teamMembers.push(newManager);
-  addNewTeamMember();
+  const rol = newManager.getRole();
+  const addName = async function(){
+    newManager.getName();
+  };
+
+  const addId = async function() {
+    await addName();
+    newManager.getId();
+  };
+
+  const addEmail = async function() {
+    await addId();
+    newManager.getEmail();
+  };
+
+  const addOffice = async function() {
+    await addEmail();
+    newManager.getOfficeNumber();
+  };
+
+  const updateTeam = async function() {
+    await addOffice();
+    teamMembers.push(newManager);
+  };
+
+  const addTeamMember = async function() {
+    await updateTeam();
+    addNewTeamMember();
+  };
+
+  addName();
+  addId();
+  addEmail();
+  addOffice();
+  updateTeam();
+  addTeamMember();
 }
 
 const addNewTeamMember = function() {
@@ -155,56 +187,59 @@ const addNewTeamMember = function() {
         break;
         case "Intern":
         addIntern();
+        break;
       }
   });
 }
 
-const addEngineer = function() {
-  const newEngineer = new Engineer();
-  newEngineer.getName();
-  newEngineer.getId();
-  newEngineer.getEmail();
-  newEngineer.getRole();
-  newEngineer.getGitHub();
-  teamMembers.push(newEngineer);
-  inquirer.prompt([{
-      type: "list",
-      name: "addNewTeamMember",
-      message: "do you want to add another team member?",
-      choices: ["YES", "NO"]
-    }]).then((answers) => {
-      switch (answers.addNewTeamMember) {
-        case "YES":
-        addNewTeamMember();
-        break;
-        case "NO":
-        console.log(teamMembers);
-      }
-  });
-}
-
-const addIntern = function() {
-  const newIntern = new Intern();
-  newIntern.getName();
-  newIntern.getId();
-  newIntern.getEmail();
-  newIntern.getRole();
-  newIntern.getSchool();
-  teamMembers.push(newIntern);
-  inquirer.prompt([{
-      type: "list",
-      name: "addNewTeamMember",
-      message: "do you want to add another team member?",
-      choices: ["YES", "NO"]
-    }]).then((answers) => {
-      switch (answers.addNewTeamMember) {
-        case "YES":
-        addNewTeamMember();
-        break;
-        case "NO":
-        console.log(teamMembers);
-      }
-  });
-}
+// const addEngineer = function() {
+//   const newEngineer = new Engineer();
+//   let role = newEngineer.getRole();
+//   newEngineer.name = newEngineer.getName();
+//   newEngineer.id = newEngineer.getId();
+//   newEngineer.email = newEngineer.getEmail();
+//   newEngineer.github = newEngineer.getGitHub();
+//   teamMembers.push(newEngineer);
+//   inquirer.prompt([{
+//       type: "list",
+//       name: "addNewTeamMember",
+//       message: "do you want to add another team member?",
+//       choices: ["YES", "NO"]
+//     }]).then((answers) => {
+//       switch (answers.addNewTeamMember) {
+//         case "YES":
+//         addNewTeamMember();
+//         break;
+//         case "NO":
+//         console.log(teamMembers);
+//         break;
+//       }
+//   });
+// }
+//
+// const addIntern = function() {
+//   const newIntern = new Intern();
+//   let role = newIntern.getRole();
+//   newIntern.name = newIntern.getName();
+//   newIntern.id = newIntern.getId();
+//   newIntern.email = newIntern.getEmail();
+//   newIntern.school = newIntern.getSchool();
+//   teamMembers.push(newIntern);
+//   inquirer.prompt([{
+//       type: "list",
+//       name: "addNewTeamMember",
+//       message: "do you want to add another team member?",
+//       choices: ["YES", "NO"]
+//     }]).then((answers) => {
+//       switch (answers.addNewTeamMember) {
+//         case "YES":
+//         addNewTeamMember();
+//         break;
+//         case "NO":
+//         console.log(teamMembers);
+//         break;
+//       }
+//   });
+// }
 
 addManager();
