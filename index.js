@@ -6,72 +6,6 @@ const path = require("path");
 //Global Variables:
 const teamMembers = [];
 
-const employeeQuestions = [{
-    type: "input",
-    name: "name",
-    message: "What is the name of the employee to be added to the group?"
-  },
-  {
-    type: "input",
-    name: "employeeID",
-    message: "What is the employee's ID number?"
-  },
-  {
-    type: "input",
-    name: "employeeEmail",
-    message: "What is the employee's email?"
-  }
-];
-
-const teamMembersQuestions = [{
-    type: "input",
-    name: "teamMemberName",
-    message: "What is the name to the team member that you want to add to the group?"
-  },
-  {
-    type: "input",
-    name: "employeeID",
-    message: "What is the employeeID number of the team member that you want to add?"
-  },
-  {
-    type: "input",
-    name: "employeeEmail",
-    message: "What is the email address of the team's Manager?"
-  },
-  {
-    type: "list",
-    name: "employeeType",
-    message: "What type of employee do you want to add to the team",
-    choices: ["Engineer", "Intern"]
-  }
-];
-
-const engineerQuestions = [{
-    type: "input",
-    name: "engineerGitHubUsername",
-    message: "What is the GitHub username of the engineer that you want to add to the group?"
-  },
-  {
-    type: "list",
-    name: "addNewTeamMember",
-    message: "Do you want to add another team member?",
-    choices: ["YES", "NO"]
-  }
-];
-
-const internQuestions = [{
-    type: "input",
-    name: "internSchool",
-    message: "To what school does the intern that you want to add to the group belongs to?"
-  },
-  {
-    type: "list",
-    name: "addNewTeamMember",
-    message: "Do you want to add another team member?",
-    choices: ["YES", "NO"]
-  },
-];
-
 //Adding Classes
 class Employee {
   constructor(name, id, email) {
@@ -82,7 +16,7 @@ class Employee {
       inquirer.prompt([{
         type: "input",
         name: "name",
-        message: "What is the name of the employee to be added to the group?"
+        message: "What is the name of the employee to be added to the group? (Note: the first Entry will be the manager of the team!)"
       }]).then((answers) => {
         if (answers.name === "") {
           const err = "Name cannot be empty; please try again";
@@ -113,7 +47,7 @@ class Employee {
         message: "What is the email the new team member?"
       }]).then((answers) => {
         if (answers.email === "") {
-          const err = "Error: Email cannot be empty; please try again";
+          const err = "Error: Email cannot be empty; please try again.";
           console.log(err);
         } else {
           this.email = answers.email;
@@ -128,20 +62,149 @@ class Employee {
 
 class Manager extends Employee {
   constructor() {
-
+    this.getRole(){
+      return "Manager";
+    }
+    this.managerOfficeNumber = managerOfficeNumber;
+    getOfficeNumber(){
+      inquirer.prompt([{
+        type: "input",
+        name: "managerOfficeNumber",
+        message: "What is the manager of the team office number?"
+      }]).then((answers) => {
+        if (answers.managerOfficeNumber === ""||isNaN(parseInt(answers.managerOfficeNumber))) {
+          const err = "Error: Email cannot be empty or the value provide is not a number; please try again.";
+          console.log(err);
+        } else {
+          this.managerOfficeNumber = answers.managerOfficeNumber;
+        }
+      });
+    }
   }
 }
 
 class Engineer extends Employee {
   constructor() {
-
+    this.getRole(){
+      return "Engineer";
+    }
+    this.github = github;
+    getGitHub(){
+      inquirer.prompt([{
+        type: "input",
+        name: "github",
+        message: "What is the GitHub username of the engineer?"
+      }]).then((answers) => {
+        if (answers.github === "") {
+          const err = "Error: github username cannot be empty; please try again.";
+          console.log(err);
+        } else {
+          this.github = answers.github;
+        }
+      });
+    }
   }
 }
 
 class Intern extends Employee {
   constructor() {
-
+    this.getRole() {
+      return "Intern";
+    }
+    this.school = school;
+    getSchool() {
+      inquirer.prompt([{
+        type: "input",
+        name: "school",
+        message: "What is the where does the intern study?"
+      }]).then((answers) => {
+        if (answers.school === "") {
+          const err = "Error: school cannot be empty; please try again.";
+          console.log(err);
+        } else {
+          this.school = answers.school;
+        }
+      });
+    }
   }
 }
 
 //Functions to Build the Team and save the information on the teamMembers array
+
+const addManager = function() {
+  const newManager = new Manager();
+  newManager.getName();
+  newManager.getId();
+  newManager.getEmail();
+  newManager.getRole();
+  newManager.getOfficeNumber();
+  teamMembers.push(newManager);
+  addNewTeamMember();
+}
+
+const addNewTeamMember = function() {
+  inquirer.prompt([{
+      type: "list",
+      name: "employeeType",
+      message: "What type of employee do you want to add to the team?",
+      choices: ["Engineer", "Intern"]
+    }]).then((answers) => {
+      switch (answers.employeeType) {
+        case "Engineer":
+        addEngineer();
+        break;
+        case "Intern":
+        addIntern();
+      }
+  });
+}
+
+const addEngineer = function() {
+  const newEngineer = new Engineer();
+  newEngineer.getName();
+  newEngineer.getId();
+  newEngineer.getEmail();
+  newEngineer.getRole();
+  newEngineer.getGitHub();
+  teamMembers.push(newEngineer);
+  inquirer.prompt([{
+      type: "list",
+      name: "addNewTeamMember",
+      message: "do you want to add another team member?",
+      choices: ["YES", "NO"]
+    }]).then((answers) => {
+      switch (answers.addNewTeamMember) {
+        case "YES":
+        addNewTeamMember();
+        break;
+        case "NO":
+        console.log(teamMembers);
+      }
+  });
+}
+
+const addIntern = function() {
+  const newIntern = new Intern();
+  newIntern.getName();
+  newIntern.getId();
+  newIntern.getEmail();
+  newIntern.getRole();
+  newIntern.getSchool();
+  teamMembers.push(newIntern);
+  inquirer.prompt([{
+      type: "list",
+      name: "addNewTeamMember",
+      message: "do you want to add another team member?",
+      choices: ["YES", "NO"]
+    }]).then((answers) => {
+      switch (answers.addNewTeamMember) {
+        case "YES":
+        addNewTeamMember();
+        break;
+        case "NO":
+        console.log(teamMembers);
+      }
+  });
+}
+
+addManager();
