@@ -1,12 +1,6 @@
 //Node Packages:
 const inquirer = require("inquirer");
 const fs = require("fs");
-const manager = require("./lib/Manager");
-const Manager = manager.Manager;
-const engineer = require("./lib/Engineer");
-const Engineer = engineer.Engineer;
-const intern = require("./lib/Intern");
-const Intern = intern.Intern;
 
 //Global Variables:
 const teamMembers = [];
@@ -80,6 +74,58 @@ const teamNameQuestion = [{
   name: "teamName",
   message: "What is the name of the team?"
 }];
+
+//Classes
+class Employee {
+  constructor(name, id, email) {
+    this.name = name;
+    this.id = id;
+    this.email = email;
+    this.role = "Employee";
+  }
+  getName() {
+    return this.name;
+  }
+  getId() {
+    return this.id;
+  }
+  getEmail() {
+    return this.email;
+  }
+  getRole() {
+    return this.role;
+  }
+};
+
+class Manager extends Employee {
+  constructor(name, id, email, managerOfficeNumber) {
+    super(name, id, email);
+    this.managerOfficeNumber = managerOfficeNumber;
+    this.role = "Manager";
+  }
+};
+
+class Engineer extends Employee {
+  constructor(name, id, email, github) {
+    super(name, id, email);
+    this.github = github;
+    this.role = "Engineer";
+  }
+  getGitHub() {
+    return this.github;
+  }
+};
+
+class Intern extends Employee {
+  constructor(name, id, email, school) {
+    super(name, id, email);
+    this.school = school;
+    this.role = "Intern";
+  }
+  getSchool() {
+    return this.school;
+  }
+};
 
 //Functions to Build the Team and save the information on the teamMembers array
 const addManager = function() {
@@ -178,7 +224,7 @@ const createHTMLfile = function() {
         for (let i = 0; i < teamMembers.length; i++) {
           switch (teamMembers[i].role) {
             case "Manager":
-              let newManager = `
+              let manager = `
               <div class="card text-dark bg-light mb-3" style="width: 22rem; height: 16rem; margin: 1rem;">
                 <div class="card-header bg-primary">
                   <h3 style="color:white;">${teamMembers[i].name}</h3>
@@ -193,10 +239,10 @@ const createHTMLfile = function() {
                 </div>
               </div>
               `;
-              cards.push(newManager);
+              cards.push(manager);
               break;
             case "Engineer":
-              let newEngineer = `
+              let engineer = `
               <div class="card text-dark bg-light mb-3" style="width: 22rem; height: 16rem; margin: 1rem;">
                 <div class="card-header bg-primary">
                   <h3 style="color:white;">${teamMembers[i].name}</h3>
@@ -211,10 +257,10 @@ const createHTMLfile = function() {
                 </div>
               </div>
               `;
-              cards.push(newEngineer);
+              cards.push(engineer);
               break;
             case "Intern":
-              let newIntern = `
+              let intern = `
               <div class="card text-dark bg-light mb-3" style="width: 22rem; height: 16rem; margin: 1rem;">
                 <div class="card-header bg-primary">
                   <h3 style="color:white;">${teamMembers[i].name}</h3>
@@ -229,7 +275,7 @@ const createHTMLfile = function() {
                 </div>
               </div>
               `;
-              cards.push(newIntern);
+              cards.push(intern);
           }
         }
       };
