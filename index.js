@@ -257,7 +257,7 @@ const createHTMLfile = function() {
 
       <body class="vh-100 vw-100 bg-light d-flex justify-content-center flex-column">
         <nav class="container-fluid d-flex justify-content-center bg-danger">
-          <h1 class="h1 lh-lg" style="color:white;">My Team</h1>
+          <h1 class="h1 lh-lg" style="color:white;">${answers.teamName}</h1>
         </nav>
         <main class="h-100 w-75 bg-light d-flex justify-content-evenly align-items-flex-start flex-wrap flex-row" style="margin: 0 auto;">
           ${cards.join("\n")}
